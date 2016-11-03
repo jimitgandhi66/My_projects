@@ -1,0 +1,10 @@
+List of files:
+processor.cpp
+
+How to Compile Program:
+
+g++ processor.cpp -o test.out
+
+How to Run Program:
+
+./test.out sample1.txt 30
