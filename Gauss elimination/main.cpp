@@ -4,8 +4,45 @@
 #include <fstream>
 #include <string>
 #include <stdlib.h>
+#include <algorithm>
 using namespace std;
+void parser(std::string &str,std::string &delimiter, vector<string> *result)
+{ 
+  string res;
+  size_t pos = 0;
+while((pos= str.find(delimiter)) != string::npos)	
+{
+	
+	res = str.substr(0,pos);
+	
+	
+	result->push_back(res.c_str());
+	
+	str.erase(0, pos + delimiter.length());
+}
+res = str.substr(0,str.length());
 
+result->push_back(res.c_str());
+}
+
+void parser_separate_LHS_RHS(std::string &str,std::string &delimiter, vector<string> *LHS, vector<string> *RHS)
+{ 
+  string res;
+  size_t pos = 0;
+  
+while((pos= str.find(delimiter)) != string::npos)	
+{
+	
+	res = str.substr(0,pos);
+	
+	LHS->push_back(res.c_str());
+	
+	str.erase(0, pos + delimiter.length());
+}
+res = str.substr(0,str.length());
+//cout<<atoi(res.c_str())<<endl;
+RHS->push_back(res.c_str());
+}
 
 
 
@@ -102,16 +139,57 @@ int main()
   //cout<<"Opening file  "<<filename<<endl;
  	ifstream myfile;
 	string s;
-	int count=0;
     myfile.open("test.txt");
+	string delimiter = "=";
+		vector<string> LHS;
+		vector<string> RHS;
+		vector<vector<string> > lhs;
+		vector<vector<string> > rhs;
+	
 	while(!myfile.eof()) 
         {
 	        getline(myfile,s); 
-            count++; 
+			s.erase(remove(s.begin(), s.end(), ' '), s.end());
+			parser_separate_LHS_RHS(s,delimiter,&LHS,&RHS);
+			string delimiter2 = "+";
+			vector<string> temp2;
+			parser(LHS[0], delimiter2,&temp2);
+			lhs.push_back(temp2);
+            vector<string> temp;
+			parser(RHS[0], delimiter2,&temp);
+			rhs.push_back(temp);	
+		    LHS.clear();
+			RHS.clear();
         }
+		
+		for(vector<vector<string> >::const_iterator itl = rhs.begin();itl!= rhs.end();itl++)
+			{
+				vector<string> temp2;
+				temp2 = *itl;
+				cout<<"rhs =  "<<endl;
+			for(vector<string>::const_iterator it = temp2.begin();it!= temp2.end();it++)
+			{
+				cout<<*it<<endl;
+			}
+			}
+		
+
+
+
+for(vector<vector<string> >::const_iterator itl = lhs.begin();itl!= lhs.end();itl++)
+			{
+				vector<string> temp2;
+				temp2 = *itl;
+				cout<<"lhs =  "<<endl;
+			for(vector<string>::const_iterator it = temp2.begin();it!= temp2.end();it++)
+			{
+				cout<<*it<<endl;
+			}
+			}	
+	
 myfile.close();
 
-int N =3;
+int N =4;
 vector<double> b;
 
 
@@ -123,28 +201,37 @@ for (int i =0 ; i<N ; i++)
 	A[i].resize(N);
 }
 
-A[0][0] = 1;
-A[0][1] = 2;
-A[0][2] = 3;
-A[1][0] = 4;
-A[1][1] = 5;
-A[1][2] = 6;
-A[2][0] = 1;
-A[2][1] = 0;
-A[2][2] = 1;
-b.push_back(1.0);
-b.push_back(1.0);
-b.push_back(1.0);
+A[0][0] = 6;
+A[0][1] = 1;
+A[0][2] = -6;
+A[0][3] = -5;
+A[1][0] = 0;
+A[1][1] = 2;
+A[1][2] = 0;
+A[1][3] = 1;
+A[2][0] = 2;
+A[2][1] = 2;
+A[2][2] = 3;
+A[2][3] = 2;
+A[3][0] = 4;
+A[3][1] = -3;
+A[3][2] = 0;
+A[3][3] = 1;
+//display_matrix(&A,N);
+b.push_back(6.0);
+b.push_back(0.0);
+b.push_back(-2.0);
+b.push_back(-7);
 vector<double> X;
-X.resize(3);
-partial_pivoting(&A,N,&b);
-perform_foward_elimination(&A, N,&b);
-display_matrix(&A,N);
-back_substitution(&A,N,&b,&X);
+X.resize(N);
+//partial_pivoting(&A,N,&b);
+//perform_foward_elimination(&A, N,&b);
+//display_matrix(&A,N);
+//back_substitution(&A,N,&b,&X);
 
 for(int i=0;i<N;i++)
 {
-	cout<<X[i]<<"  ";
+	//cout<<X[i]<<"  ";
 }
  }
 
@@ -158,20 +245,3 @@ for(int i=0;i<N;i++)
 
 
 
-
-void parser(std::string &str,std::string &delimiter, vector<int> *result)
-{ 
-  string res;
-  size_t pos = 0;
-while((pos= str.find(delimiter)) != string::npos)	
-{
-	
-	res = str.substr(0,pos);
-	cout<<atoi(res.c_str())<<endl;
-	result->push_back(atoi(res.c_str()));
-	str.erase(0, pos + delimiter.length());
-}
-res = str.substr(0,str.length());
-//cout<<atoi(res.c_str())<<endl;
-result->push_back(atoi(res.c_str()));
-}
