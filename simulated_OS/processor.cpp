@@ -2,7 +2,7 @@
 /* Program Name: Processor.cpp 
 /* Description: This program simulates the Processor given in assignment-1 for OS
 /* 
-/* Creator: Trusit Shah(tss140030)
+/* Creator: Trusit Shah(tss140030) Jimit Gandhi (jhg140430)
 /* 
 /* Created On: 02-18-2015 
 /* Last Modified On: 02-26-2015
